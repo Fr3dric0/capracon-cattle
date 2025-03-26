@@ -16,6 +16,18 @@ export class Pipeline extends cdk.Stack {
       }),
     });
 
-    pipeline.addStage(new AppStage(this, "Production", { stageName: 'prod' }));
+    const environment = 'prod';
+    const baseName = `${environment}-${APPLICATION_NAME}`;
+
+    const prodStageProps = { environment: environment, baseName: baseName };
+    // Primary: eu-north-1
+    pipeline.addStage(
+      new AppStage(this, "ProductionEuNorth1", prodStageProps, { stageName: `${environment}-north-1`, env: { region: 'eu-north-1' } }),
+    );
+
+    // Failover: eu-west-1
+    pipeline.addStage(
+      new AppStage(this, "ProductionWest1", prodStageProps, { stageName: `${environment}-eu-west-1`, env: { region: 'eu-west-1' } }),
+    );
   }
 }

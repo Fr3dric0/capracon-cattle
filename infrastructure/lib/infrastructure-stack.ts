@@ -25,13 +25,18 @@ export class AppStack extends cdk.Stack {
   }
 }
 
+export class AppStageProps {
+  readonly baseName: string;
+  readonly environment: string;
+}
+
 export class AppStage extends cdk.Stage {
-  constructor(scope: Construct, id: string, props: cdk.StageProps) {
-    super(scope, id, props);
+  constructor(scope: Construct, id: string, props: AppStageProps, stageProps: cdk.StageProps) {
+    super(scope, id, stageProps);
 
     new AppStack(this, 'AppStack', {
-      stackName: `${props.stageName}-${APPLICATION_NAME}`,
-      environment: props.stageName!!,
+      stackName: props.baseName,
+      environment: props.environment,
     });
   }
 }
